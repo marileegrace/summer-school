@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cordova Summer School 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+:root{--navy:#0a0a1a;--blue:#1a3a6a;--lb:#1e2a42;--gold:#F4B942;--green:#2ecc71;--red:#e74c3c;--orange:#f39c12;--purple:#9b59b6;--text:#e8e8f0;--textl:#a0a0b8;--bg:#0d0d1f;--card:#141428;--card-border:#1e1e38;--accent-glow:rgba(244,185,66,.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:16px;line-height:1.7}
+
+/* Profile Selector */
+.profile-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(180deg,#0a0a1a 0%,#0d1528 50%,#0a0a1a 100%);color:#fff;text-align:center;padding:20px}
+.profile-screen h1{font-family:'Space Grotesk',sans-serif;font-size:2.8rem;margin-bottom:12px;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,#a0a0c0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.profile-screen p{opacity:.5;margin-bottom:50px;font-size:1.1rem;font-weight:400;letter-spacing:.5px;text-transform:uppercase}
+.profile-cards{display:flex;gap:32px;flex-wrap:wrap;justify-content:center}
+.profile-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:40px 50px;cursor:pointer;transition:all .4s;min-width:220px;backdrop-filter:blur(10px)}
+.profile-card:hover{background:rgba(244,185,66,.06);transform:translateY(-6px);border-color:var(--gold);box-shadow:0 20px 60px rgba(244,185,66,.1)}
+.profile-card .avatar{font-size:4.5rem;margin-bottom:16px}
+.profile-card .name{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:#fff}
+.profile-card .grade{font-size:.9rem;opacity:.5;margin-top:6px;letter-spacing:.3px}
+
+/* Top Banner */
+.banner{background:linear-gradient(135deg,#0d1528 0%,#0a1020 100%);color:#fff;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.banner h1{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:700;letter-spacing:-.3px;opacity:.9}
+.banner .sub{font-size:.82rem;opacity:.4;font-weight:400}
+.banner-right{display:flex;align-items:center;gap:14px}
+.week-badge{background:var(--gold);color:#0a0a1a;padding:7px 18px;border-radius:16px;font-weight:700;font-size:.85rem}
+.switch-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.7);padding:7px 16px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:600;transition:all .2s}
+.switch-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+
+/* Nav */
+.nav{background:rgba(10,10,26,.95);border-bottom:1px solid rgba(255,255,255,.06);display:flex;overflow-x:auto;padding:0 16px;backdrop-filter:blur(10px)}
+.nav button{padding:14px 18px;border:none;background:none;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:600;color:var(--textl);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s}
+.nav button:hover{color:#fff}
+.nav button.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* Main */
+.main{max-width:860px;margin:0 auto;padding:28px 20px}
+.sec{display:none}.sec.active{display:block}
+
+/* Day Selector */
+.day-bar{display:flex;gap:8px;justify-content:center;margin-bottom:24px;flex-wrap:wrap}
+.day-btn{width:60px;height:48px;border-radius:12px;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.85rem;color:var(--textl);cursor:pointer;transition:all .25s;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2}
+.day-btn:hover{border-color:var(--gold);color:#fff}
+.day-btn.active{background:var(--gold);color:#0a0a1a;border-color:var(--gold);box-shadow:0 4px 16px rgba(244,185,66,.3)}
+.day-btn.done{background:rgba(46,204,113,.15);border-color:var(--green);color:var(--green)}
+.day-btn .day-check{font-size:.6rem}
+
+/* Progress Bar */
+.progress-wrap{margin-bottom:24px}
+.progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:.9rem;font-weight:600}
+.progress-label .pct{color:var(--gold);font-family:'Space Grotesk',sans-serif;font-size:1.1rem}
+.progress-track{height:12px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#f7c948);border-radius:10px;transition:width .5s ease;width:0%}
+.progress-fill.complete{background:linear-gradient(90deg,var(--green),#48d98a)}
+
+/* Cards */
+.card{background:var(--card);border-radius:16px;padding:28px;margin-bottom:20px;border:1px solid var(--card-border);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-.3px}
+.card h3{font-size:1.05rem;font-weight:600;color:var(--gold);margin:18px 0 10px}
+.card p{color:var(--textl);font-size:.95rem;line-height:1.7;margin-bottom:12px}
+
+/* Block Cards */
+.block-row{display:grid;gap:14px;margin:18px 0}
+.block-item{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:22px;transition:all .3s;position:relative;cursor:default}
+.block-item:hover{border-color:rgba(244,185,66,.3);box-shadow:0 4px 20px rgba(244,185,66,.06)}
+.block-item.done{border-color:var(--green);background:rgba(46,204,113,.05)}
+.block-item.done .block-name,.block-item.done .block-desc{opacity:.6}
+.block-item.done .block-done-badge{display:inline-flex}
+.block-done-badge{display:none;align-items:center;gap:4px;background:var(--green);color:#fff;padding:3px 10px;border-radius:8px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.block-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.block-label{display:flex;align-items:center;gap:10px}
+.block-icon{font-size:1.6rem}
+.block-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.05rem;color:#fff}
+.block-time{font-size:.78rem;color:var(--textl);background:rgba(255,255,255,.06);padding:4px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.08)}
+.block-desc{font-size:.95rem;color:var(--textl);line-height:1.7;margin-bottom:8px}
+.block-tip{font-size:.85rem;color:var(--gold);font-weight:600;margin-bottom:14px;padding:8px 14px;background:rgba(244,185,66,.06);border-radius:10px;border-left:3px solid var(--gold)}
+.block-links{display:flex;gap:10px;flex-wrap:wrap}
+.block-link{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;font-size:.85rem;font-weight:600;text-decoration:none;transition:all .25s;border:none;cursor:pointer;font-family:'Inter',sans-serif}
+.block-link:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.link-ixl{background:linear-gradient(135deg,#2E5090,#1a3a6a);color:#fff}
+.link-khan{background:linear-gradient(135deg,#14BF96,#0d9b7a);color:#fff}
+.link-epic{background:linear-gradient(135deg,#FF6B35,#e0552a);color:#fff}
+.link-typing{background:linear-gradient(135deg,#9B59B6,#7d3c98);color:#fff}
+.link-scratch{background:linear-gradient(135deg,#F7A41D,#d4891a);color:#0a0a1a}
+.link-other{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.link-spanish{background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff}
+.link-start{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff}
+.link-check{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
+
+.block-check{width:26px;height:26px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
+
+/* Prompt Boxes */
+.prompt{background:rgba(255,255,255,.03);border:1px solid rgba(244,185,66,.2);border-radius:14px;padding:22px;margin:16px 0;text-align:center}
+.prompt .q{font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.4}
+.prompt textarea,.prompt input[type=text]{width:100%;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:10px;font-family:'Inter',sans-serif;font-size:1rem;resize:vertical;min-height:60px;background:rgba(255,255,255,.04);color:#fff;line-height:1.6}
+.prompt textarea:focus,.prompt input:focus{border-color:var(--gold);outline:none;background:rgba(244,185,66,.04)}
+.prompt textarea::placeholder,.prompt input::placeholder{color:rgba(255,255,255,.25)}
+.prompt input[type=text]{min-height:unset}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:12px 24px;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.btn-blue{background:linear-gradient(135deg,#2E5090,#1a3a6a);color:#fff}
+.btn-green{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff}
+.btn-gold{background:var(--gold);color:#0a0a1a}
+.btn-red{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
+.btn-outline{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.btn-lg{padding:16px 32px;font-size:1.05rem}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* Next/Prev nav */
+.step-nav{display:flex;justify-content:space-between;align-items:center;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.06)}
+.step-nav .btn{min-width:140px;justify-content:center}
+
+/* Mood */
+.mood-row{display:flex;gap:12px;justify-content:center;margin:16px 0}
+.mood-btn{width:54px;height:54px;border-radius:50%;border:2px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);font-size:1.5rem;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center}
+.mood-btn:hover{border-color:var(--gold);transform:scale(1.1);background:rgba(244,185,66,.06)}
+.mood-btn.sel{border-color:var(--gold);background:rgba(244,185,66,.12);transform:scale(1.15);box-shadow:0 0 20px rgba(244,185,66,.15)}
+
+/* Timer */
+.timer-box{text-align:center;padding:24px}
+.timer-num{font-family:'Space Grotesk',sans-serif;font-size:5rem;font-weight:800;color:#fff;margin:20px 0;letter-spacing:4px}
+.timer-num.warn{color:var(--orange)}.timer-num.danger{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.timer-presets{display:flex;gap:12px;justify-content:center;margin:20px 0;flex-wrap:wrap}
+.tpreset{padding:10px 20px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;font-size:.9rem;color:var(--textl)}
+.tpreset:hover,.tpreset.on{border-color:var(--gold);background:rgba(244,185,66,.08);color:#fff}
+.timer-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* Stop Check */
+.stop-banner{background:linear-gradient(135deg,rgba(231,76,60,.15),rgba(192,57,43,.1));border:1px solid rgba(231,76,60,.3);color:#fff;border-radius:14px;padding:22px;margin:16px 0;text-align:center}
+.stop-banner h3{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin-bottom:8px;color:#fff}
+.checks{display:flex;flex-direction:column;gap:8px;margin-top:14px;text-align:left;max-width:480px;margin-left:auto;margin-right:auto}
+.chk{display:flex;align-items:center;gap:12px;font-weight:500;font-size:1rem;color:#e8e8f0}
+.chk input{width:22px;height:22px;accent-color:var(--gold);flex-shrink:0}
+
+/* If-Then */
+.ift{background:var(--card);border-radius:14px;border:1px solid var(--card-border);overflow:hidden;margin:16px 0;transition:all .3s}
+.ift:hover{border-color:rgba(244,185,66,.2)}
+.ift-if{background:linear-gradient(135deg,rgba(231,76,60,.2),rgba(192,57,43,.15));color:#fff;padding:16px 22px;font-weight:700;font-size:1rem;border-bottom:1px solid rgba(231,76,60,.2)}
+.ift-body{padding:16px 22px}
+.ift-bad{background:rgba(231,76,60,.08);border-left:3px solid var(--red);padding:12px 16px;margin:8px 0;border-radius:0 10px 10px 0;font-size:.9rem;color:#ff8a80}
+.ift-good{background:rgba(46,204,113,.08);border-left:3px solid var(--green);padding:12px 16px;margin:8px 0;border-radius:0 10px 10px 0;font-size:.9rem;color:#81ecb0}
+.ift-label{font-weight:700;font-size:.72rem;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
+
+/* Quote */
+.quote-box{background:linear-gradient(135deg,rgba(244,185,66,.06),rgba(244,185,66,.02));border:1px solid rgba(244,185,66,.15);border-radius:14px;padding:24px;text-align:center;margin:16px 0}
+.quote-box .qt{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:600;font-style:italic;line-height:1.6;margin-bottom:8px;color:#fff}
+.quote-box .au{font-size:.82rem;opacity:.4;color:var(--gold)}
+
+/* Checklist */
+.cklist{list-style:none;padding:0}
+.cklist li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:1rem;line-height:1.6;color:var(--text)}
+.cklist li:last-child{border-bottom:none}
+.cklist input{width:22px;height:22px;margin-top:2px;accent-color:var(--green);flex-shrink:0;cursor:pointer}
+
+/* Word Attack Steps */
+.step-list{list-style:none;padding:0}
+.step-list li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);align-items:flex-start;font-size:1rem;color:var(--text)}
+.step-num{background:var(--gold);color:#0a0a1a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+
+/* Estimate */
+.est-input{width:80px;padding:10px;border:1px solid rgba(255,255,255,.15);border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:600;background:rgba(255,255,255,.04);color:#fff}
+.est-input:focus{border-color:var(--gold);outline:none}
+
+/* Select dropdown dark theme */
+#weekSelect option{background:#141428;color:#fff}
+
+/* Responsive */
+@media(max-width:600px){.banner h1{font-size:1.1rem}.timer-num{font-size:3.5rem}.card{padding:20px}.profile-card{padding:28px 34px;min-width:160px}.profile-card .avatar{font-size:3.5rem}.block-link{padding:8px 14px;font-size:.82rem}.day-btn{width:50px;height:42px;font-size:.78rem}}
+.fade{animation:fadeIn .35s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- PROFILE SELECTOR -->
+<div class="profile-screen" id="profileScreen">
+  <h1>CORDOVA SUMMER SCHOOL 2026</h1>
+  <p>Who's logging in today?</p>
+  <div class="profile-cards">
+    <div class="profile-card" onclick="selectProfile('cristopher')">
+      <div class="avatar">🚀</div>
+      <div class="name">Cristopher</div>
+      <div class="grade">Rising 7th Grade</div>
+    </div>
+    <div class="profile-card" onclick="selectProfile('judah')">
+      <div class="avatar">🦁</div>
+      <div class="name">Judah</div>
+      <div class="grade">Rising 4th Grade</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+  <div class="banner">
+    <div>
+      <h1 id="bannerName">SUMMER SCHOOL</h1>
+      <div class="sub" id="bannerDate"></div>
+    </div>
+    <div class="banner-right">
+      <select id="weekSelect" onchange="changeWeek(this.value)" style="padding:6px 12px;border-radius:8px;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:#fff;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer">
+        <option value="1">Week 1</option><option value="2">Week 2</option><option value="3">Week 3</option><option value="4">Week 4</option><option value="5">Week 5</option>
+        <option value="6">Week 6</option><option value="7">Week 7</option><option value="8">Week 8</option><option value="9">Week 9</option><option value="10">Week 10</option>
+      </select>
+      <button class="switch-btn" onclick="switchProfile()">Switch User</button>
+    </div>
+  </div>
+
+  <div class="nav" id="navBar"></div>
+  <div class="main" id="mainContent"></div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// CURRICULUM DATA
+// ══════════════════════════════════
+const DATA = {
+cristopher: {
+  name: "Cristopher", emoji: "🚀", title: "CRISTOPHER'S SUMMER SCHOOL",
+  subtitle: "Your brain is fast. This helps it be fast AND accurate.",
+  hasEF: true,
+  weeks: [
+    {theme:"Launch & Baseline",code:"The Phantom Reader",
+     reading:{desc:"Introduce STOP & CHECK: read a sentence, pause, say it back. Use Star Wars junior novel or a book at your Lexile level (951L). Read 2 pages aloud daily.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Sentence Scramble: Rearrange mixed-up Star Wars sentences into correct order. Practice retelling scenes using 'First... Then... Finally...' Write 3 sentences in journal.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Goblin Tools",url:"https://goblin.tools",cls:"link-other"}]},
+     math:{desc:"Times tables fluency check — identify gaps. Use F1 lap time scenarios: 'If each lap is 87 seconds and there are 5 laps, how long is the race?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Build a reading nook / 'Jedi Study Temple.' Set up your summer workspace. Make it yours!",links:[]},
+     typing:{desc:"Start with Typing.com lesson 1 — learn home row keys. Then try NitroType for fun.",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Baking Soda & Vinegar Volcano — build it, erupt it, write a Jedi field report!"},
+    {theme:"Word Attack",code:"Decoding Droids",
+     reading:{desc:"Syllable breaking: practice chunking longer words (con-grat-u-la-tions). Use animal encyclopedia — read entries, circle any word you'd normally skip.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Daily journal: 3 sentences about yesterday. Use the WHO/WHAT/WHERE/WHEN/WHY checklist before writing to make sure context is included.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Long division with animal population data. 'If 1,248 sea turtles split into 6 groups, how many in each group?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"DIY cardboard R2-D2 build — follow written instructions. Reading comprehension in disguise!",links:[{label:"Scratch Coding",url:"https://scratch.mit.edu",cls:"link-scratch"}]},
+     typing:{desc:"Typing.com lesson + TypeRacer Star Wars mode!",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"TypeRacer",url:"https://play.typeracer.com/?universe=starwars",cls:"link-typing"}]},
+     experiment:"Seed Growth Journal — plant seeds, measure daily, create an F1-style growth leaderboard"},
+    {theme:"Context Clues",code:"The Clue Hunter",
+     reading:{desc:"Context clue strategies: reread the sentence, look at surrounding sentences, use pictures. Practice with F1 articles or animal facts at your level.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Expand sentences: Start with 'The car raced.' Add who, where, when, why, how. Build to 3-4 sentence paragraphs about F1 races.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Word problems: underline key info, cross out extras, draw pictures. 'A cheetah runs 70mph. A gazelle runs 50mph. How much faster?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Make a density tower experiment. Write a lab report using the template: Question, Prediction, Materials, Steps, Result.",links:[]},
+     typing:{desc:"Typing.com + NitroType races",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Kitchen Density Tower — layer liquids, drop objects, predict where they float"},
+    {theme:"Comprehension Check-ins",code:"Mind Reader",
+     reading:{desc:"After every paragraph: STOP — 'What just happened?' — 'What might happen next?' Use graphic novels (Star Wars comics) for visual support.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Retelling practice: Read a short passage, close the book, tell the story in your own words. Record on phone and listen back — does it make sense?",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Night Zookeeper",url:"https://www.nightzookeeper.com",cls:"link-other"}]},
+     math:{desc:"Fractions with recipes: 'The recipe makes 3/4 of a batch. If we need to triple it, how much of each ingredient?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Animal research project START: Pick 3 favorite animals. Begin gathering facts using Epic! and approved websites.",links:[{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     typing:{desc:"TypeRacer Star Wars + TypingClub games",links:[{label:"TypeRacer",url:"https://play.typeracer.com/?universe=starwars",cls:"link-typing"},{label:"TypingClub",url:"https://www.typingclub.com",cls:"link-typing"}]},
+     experiment:"Egg Drop Challenge — design a container to protect a raw egg from a 6-foot drop"},
+    {theme:"MIDPOINT CHECK",code:"Halfway Hyperdrive",
+     reading:{desc:"Re-read a passage from Week 1 — compare accuracy! Start a chapter book at your Lexile (951L): Percy Jackson, Hatchet, or Star Wars novels.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Write a 'sports report' about an imaginary F1 race. Must include: who won, what happened, when, where, and one quote.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Decimals and measurement: measure real objects, track daily temperature. Graph your results!",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Build a catapult from popsicle sticks. Calculate launch distances. Record and compare data.",links:[{label:"Scratch Coding",url:"https://scratch.mit.edu",cls:"link-scratch"}]},
+     typing:{desc:"Speed test! How fast can you type now vs. Week 1?",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Mentos & Diet Coke Geyser (OUTSIDE!) + DIY Catapult launch distance competition"},
+    {theme:"Fluency Push",code:"Speed & Accuracy",
+     reading:{desc:"Timed reading: 1 min, count words, re-read for accuracy. Goal: increase BOTH speed and accuracy. Use high-interest articles.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"ReadTheory",url:"https://readtheory.org",cls:"link-other"}]},
+     writing:{desc:"Dialogue writing: Write a conversation between two Star Wars characters. Use quotation marks, new lines, and 'said' alternatives.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Order of operations: 'Your F1 team budget: Start with $200M, subtract $45M for engine...' Real-world multi-step problems.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Build a simple circuit (LED + battery). Follow WRITTEN instructions carefully. Write what you did.",links:[]},
+     typing:{desc:"NitroType championship week — try to beat your high score!",links:[{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"},{label:"TypeRacer",url:"https://play.typeracer.com/?universe=starwars",cls:"link-typing"}]},
+     experiment:"Invisible Ink Messages — write secret Rebel spy messages with lemon juice"},
+    {theme:"Inference & Beyond",code:"Reading Between the Lines",
+     reading:{desc:"Inference: 'The text says... I know that... So I think...' Practice with mystery short stories — predict the ending!",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Summary writing: Read an article, highlight 3 key points, write a 5-sentence summary using 'Somebody Wanted But So Then.'",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Geometry: angles, area, perimeter. Design an animal habitat on paper with specific measurements. Calculate total area.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Animal research project PART 2: Create a poster or mini-presentation. Include facts, drawings, and comparisons.",links:[]},
+     typing:{desc:"Typing.com advanced lessons + TypeRacer",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"TypeRacer",url:"https://play.typeracer.com/?universe=starwars",cls:"link-typing"}]},
+     experiment:"Static Electricity — use 'The Force' (balloons) to move objects without touching them!"},
+    {theme:"Expression Focus",code:"Say What You Mean",
+     reading:{desc:"Paired reading with Judah: read together, take turns, discuss after each page. Focus on asking good questions.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Persuasive writing: 'Write a letter to NASA about why they should send [animal] to space.' Give 3 reasons with evidence.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Night Zookeeper",url:"https://www.nightzookeeper.com",cls:"link-other"}]},
+     math:{desc:"Pre-algebra: 'If a car goes x mph for 3 hours and travels 210 miles, what is x?' Introduction to solving for unknowns.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Egg drop challenge (or new design). Write about what worked and why.",links:[]},
+     typing:{desc:"Free choice typing day — pick your favorite!",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"},{label:"TypeRacer",url:"https://play.typeracer.com/?universe=starwars",cls:"link-typing"}]},
+     experiment:"Homemade Slime Lab — measure ratios, test different recipes, name your alien species"},
+    {theme:"Putting It Together",code:"The Final Lap",
+     reading:{desc:"Independent reading: 20 min silent reading + written response (3 sentences: What happened? How did it make you feel? What do you predict?)",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Creative writing: Star Wars fan fiction (1-2 pages). Must have beginning, middle, end, and 2+ characters with dialogue.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Mixed review: word problems combining all operations. Timed self-challenge — beat your own record!",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Build a model F1 car (Lego/cardboard). Write detailed instructions someone else could follow.",links:[{label:"Scratch Coding",url:"https://scratch.mit.edu",cls:"link-scratch"}]},
+     typing:{desc:"Speed test comparison — how much have you improved since Week 1?",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Paper Airplane Engineering — design, test, measure, graph results like F1 aerodynamics testing"},
+    {theme:"Celebrate & Set Goals",code:"Champion's Podium",
+     reading:{desc:"Re-take a comprehension exercise from Week 1. Compare and celebrate growth! Read a passage at grade level and discuss together.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"ReadTheory",url:"https://readtheory.org",cls:"link-other"}]},
+     writing:{desc:"Portfolio review: look through ALL summer writing. Pick the best piece, revise and 'publish.' Write a letter to your 7th-grade teacher.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Math games day: multiplication war, fraction dice, geometry scavenger hunt. Fun review of all concepts!",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"FAMILY SHOWCASE: Present animal research + best experiments. Celebration dinner!",links:[]},
+     typing:{desc:"Final typing speed test. Print your certificate!",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Homemade Lava Lamp — your 'Summer of Science' trophy to display at the showcase!"},
+  ]
+},
+judah: {
+  name: "Judah", emoji: "🦁", title: "JUDAH'S SUMMER SCHOOL",
+  subtitle: "Keep growing, keep exploring, keep being awesome.",
+  hasEF: false,
+  weeks: [
+    {theme:"Launch & Spelling Kickoff",code:"Word Wizard",
+     reading:{desc:"Independent reading: 20 min daily from Magic Tree House, animal books, or Star Wars junior novels. Start a 'Cool Words' journal — write 3 new words each day.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Spelling: Learn 10 words this week using Look-Say-Cover-Write-Check. Sort words by pattern. Write sentences using 5 spelling words.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Review: addition/subtraction fluency, intro multiplication. 'A dolphin eats 33 pounds of fish daily. How much in a week?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Set up a Nature Journal. Go outside, observe an animal or plant, sketch it, label parts, write 2 sentences.",links:[]},
+     typing:{desc:"Start with TypingClub — fun animated lessons for beginners!",links:[{label:"TypingClub",url:"https://www.typingclub.com",cls:"link-typing"},{label:"Dance Mat Typing",url:"https://www.bbc.co.uk/bitesize/topics/zf2f9j6/articles/z3c6tfr",cls:"link-typing"}]},
+     experiment:"Baking Soda & Vinegar Volcano — name your volcanic planet!"},
+    {theme:"Vowel Team Takeover",code:"Sound Safari",
+     reading:{desc:"Read aloud 10 min + silent read 10 min. Draw a picture of favorite scene with a caption. Find 5 interesting words in today's reading.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Spelling: vowel teams (ea, oa, ai, ee, igh). Word sorts — cut out cards and sort by pattern. Rainbow writing.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Multiplication tables 2-5. 'Each F1 car has 4 tires. 10 cars in the pit = how many tires?'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Plant a seed, start a growth journal. Measure daily, record in chart, predict growth.",links:[]},
+     typing:{desc:"TypingClub lesson + NitroType for fun",links:[{label:"TypingClub",url:"https://www.typingclub.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Seed Growth Journal — measure daily, create a growth leaderboard"},
+    {theme:"Tricky Patterns",code:"Pattern Patrol",
+     reading:{desc:"After each chapter: Who/What/Where/When graphic organizer. Compare two characters — same and different.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Spelling: silent letters, double consonants, -tion/-sion endings. Create a Tricky Words Wall. Daily rainbow writing.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Multiplication 6-9. 'A spider has 8 legs. How many on 7 spiders? 12 spiders?' Intro to arrays.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Build a bird feeder from recycled materials. Write step-by-step building instructions.",links:[]},
+     typing:{desc:"Typing.com structured lesson + NitroType",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Egg Drop Challenge — design, build, test, redesign!"},
+    {theme:"Spelling in Action",code:"Write It Right",
+     reading:{desc:"Start chapter books at 745L Lexile: Dog Man, Wings of Fire, or Diary of a Wimpy Kid. Read 1 chapter/day.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Write a short story (5-8 sentences) using ALL 10 spelling words. Underline them. Self-edit with colored pen.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Night Zookeeper",url:"https://www.nightzookeeper.com",cls:"link-other"}]},
+     math:{desc:"Division: sharing equally. 'You have 24 Star Wars figures for 4 friends...' Use Legos as manipulatives.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Animal habitat diorama: research habitat, build shoebox diorama with labels.",links:[{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     typing:{desc:"TypingClub + Dance Mat Typing",links:[{label:"TypingClub",url:"https://www.typingclub.com",cls:"link-typing"},{label:"Dance Mat Typing",url:"https://www.bbc.co.uk/bitesize/topics/zf2f9j6/articles/z3c6tfr",cls:"link-typing"}]},
+     experiment:"Kitchen Density Tower — layer liquids, predict where objects float"},
+    {theme:"MIDPOINT CHECK",code:"Halfway Hero",
+     reading:{desc:"Re-read from Week 1 — has reading gotten smoother? Increase to 25 min. Start book reviews: rate 1-5 stars with a reason.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Spelling test on ALL words so far. Introduce homophones: their/there/they're, to/too/two. Daily practice sentences.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Mixed operations review. Plan a pretend pizza party: how many pizzas for 12 people if each eats 2 slices and each pizza has 8?",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"What dissolves in water? Test sugar, salt, sand, oil. Record predictions vs. results.",links:[]},
+     typing:{desc:"Speed test — how much have you improved since Week 1?",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Mentos & Diet Coke Geyser (OUTSIDE!) — predict geyser height, measure, graph it"},
+    {theme:"Reading for Fun",code:"Book Bonanza",
+     reading:{desc:"Free choice week — pick ANY book! Visit the library. Goal: finish a whole book. Make a 'movie poster' book report.",links:[{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Spelling games: Scrabble Jr., Boggle. Write a letter to a friend using this week's words. Friendly letter format.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Geometry: shapes, symmetry, patterns. Find symmetry in nature (butterflies, leaves). Draw and label shapes around the house.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Build a marble run from cardboard tubes. Test designs — which goes fastest?",links:[{label:"Scratch Coding",url:"https://scratch.mit.edu",cls:"link-scratch"}]},
+     typing:{desc:"NitroType racing championship!",links:[{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Invisible Ink Messages — write secret coded messages between Rebel spies"},
+    {theme:"Writing Power",code:"Author's Workshop",
+     reading:{desc:"Paired reading with Cristopher — each reads a page, then discuss. Plus 15 min independent reading.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Prefixes (un-, re-, pre-) and suffixes (-ing, -ed, -ly). Word building with root words. 'Before & After' sentences.",links:[{label:"Open IXL Spelling",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Fractions: halves, thirds, fourths using food. 'If a Star Destroyer is divided into 4 equal sections...'",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Khan Academy Math",url:"https://www.khanacademy.org/math",cls:"link-khan"}]},
+     project:{desc:"Animal research: pick a favorite animal, find 10 facts, organize into categories.",links:[{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     typing:{desc:"Typing.com lesson + TypingClub games",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"TypingClub",url:"https://www.typingclub.com",cls:"link-typing"}]},
+     experiment:"Static Electricity — use 'The Force' with balloons to move objects!"},
+    {theme:"Grammar Games",code:"Sentence Stars",
+     reading:{desc:"Reading response: write 3 sentences after reading — 1 fact, 1 opinion, 1 question.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Complete sentences vs. fragments. Subject-verb agreement. 'Fix the Sentence' game. Spelling words in silly sentences.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Time and measurement. 'The F1 race starts at 2:15 and ends at 4:45. How long?' Measure recipe ingredients.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Bake/cook together following a recipe. Judah reads instructions aloud and handles measuring.",links:[]},
+     typing:{desc:"NitroType + Typing.com",links:[{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"},{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"}]},
+     experiment:"Homemade Slime Lab — test different recipes, name your alien species"},
+    {theme:"Putting It All Together",code:"Super Scholar",
+     reading:{desc:"Independent 30 min reading. Pick a passage and read aloud to someone. Write a 'What I Learned' paragraph.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Write an animal adventure story (1 page). Use 10+ spelling words from the summer. Self-edit with checklist.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Night Zookeeper",url:"https://www.nightzookeeper.com",cls:"link-other"}]},
+     math:{desc:"Mixed review word problems. Math journal: write and solve your OWN word problems. Challenge: stump Mom!",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"Build a poster: 'Top 10 Things I Learned This Summer.' Include drawings, facts, favorites.",links:[]},
+     typing:{desc:"Speed test + favorite typing game",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"},{label:"NitroType",url:"https://www.nitrotype.com",cls:"link-typing"}]},
+     experiment:"Paper Airplane Engineering — test designs, measure distances, graph results"},
+    {theme:"Celebrate & Launch",code:"Champion Mode",
+     reading:{desc:"Re-take a reading activity from Week 1. Compare and celebrate! Set 3 goals for 4th grade. Recommend a book to someone.",links:[{label:"Open IXL Reading",url:"https://www.ixl.com/ela",cls:"link-ixl"},{label:"Open Epic! Library",url:"https://www.getepic.com",cls:"link-epic"}]},
+     writing:{desc:"Final spelling bee on all summer words! Write a letter to your 4th-grade teacher about what you learned.",links:[{label:"Open IXL Language Arts",url:"https://www.ixl.com/ela",cls:"link-ixl"}]},
+     math:{desc:"Math games day: card games, dice probability, measurement Olympics! Fun review of everything.",links:[{label:"Open IXL Math",url:"https://www.ixl.com/math",cls:"link-ixl"},{label:"Prodigy Math",url:"https://www.prodigygame.com",cls:"link-khan"}]},
+     project:{desc:"FAMILY SHOWCASE: Present animal research + best experiments. Ice cream celebration!",links:[]},
+     typing:{desc:"Final speed test. Print your certificate from Typing.com!",links:[{label:"Typing.com",url:"https://www.typing.com",cls:"link-typing"}]},
+     experiment:"Homemade Lava Lamp — your Summer of Science trophy!"},
+  ]
+}
+};
+
+// Daily schedule: which blocks appear each day
+const DAILY_SCHED = {
+  mon: {label:'Mon',full:'Monday',blocks:['typing','reading','writing','math'],note:'Fresh Start'},
+  tue: {label:'Tue',full:'Tuesday',blocks:['typing','reading','writing','math','spanish'],note:'+ Spanish!'},
+  wed: {label:'Wed',full:'Wednesday',blocks:['typing','reading','writing','math','project'],note:'Project Day'},
+  thu: {label:'Thu',full:'Thursday',blocks:['typing','reading','writing','math','project','spanish'],note:'Project + Spanish!'},
+  fri: {label:'Fri',full:'Friday',blocks:['typing','reading','math','experiment'],note:'Experiment Friday!'}
+};
+const DAY_KEYS = ['mon','tue','wed','thu','fri'];
+
+// Day-specific focus tips (rotate by day within the weekly theme)
+const DAY_TIPS = {
+  reading: [
+    'Start fresh — read aloud today, take it slow',
+    'Continue where you left off — add new words to your journal',
+    'Silent reading today — pause and retell to yourself after each page',
+    'Re-read a tricky part from earlier this week. Smoother now?',
+    'Free choice — read whatever grabs you!'
+  ],
+  writing: [
+    'Focus on planning before you write — think it, say it, then write it',
+    'Draft and revise — read each sentence back aloud',
+    'Edit yesterday\'s work with a colored pen. Find 2 things to improve',
+    'Practice makes progress — keep building on this week\'s skill',
+    'Fun writing — choose your own topic!'
+  ],
+  math: [
+    'Warm up with 5 quick facts, then dive into the main skill',
+    'Practice yesterday\'s skill — try harder problems today',
+    'Word problems day — draw pictures and underline key info',
+    'Challenge yourself — try the next level up',
+    'Math games — make it fun and review the week!'
+  ],
+  typing: [
+    'Warm up: home row focus — accuracy over speed',
+    'Speed building — try to beat yesterday\'s score',
+    'Accuracy challenge — aim for zero mistakes',
+    'Mixed practice — combine what you\'ve learned',
+    'Race day — beat your personal best!'
+  ]
+};
+
+// If-Then scenarios (Cristopher only)
+const IF_THEN = [[{i:"I hit a word I don't know while reading and just skip over it...",b:"I won't understand the sentence, then the paragraph, then the whole page. 30 minutes wasted.",g:"I STOP, sound it out, check if I know what it means. 15 extra seconds now saves re-reading later."},{i:"I rush through writing without re-reading...",b:"Sentences don't make sense. Mom asks 'what does this mean?' and I redo it. Double work.",g:"I read each sentence OUT LOUD after writing it. Sounds weird? Fix it NOW."}],[{i:"I think 'I'll do my blocks later, I have all day'...",b:"Later becomes evening. Now I'm tired AND still have work. No free time at all.",g:"Blocks FIRST. Done by 11:30. The rest of the day is MINE."},{i:"I see a hard problem and skip it...",b:"The hard ones are what I need to practice. I get better at easy stuff and stay stuck on hard stuff.",g:"Try for 3 minutes. If stuck, write down WHAT confused me and ask for help. That's smart, not quitting."}],[{i:"My mind wanders during reading but I keep going...",b:"I 'read' 2 pages but remember nothing. Those 10 minutes are gone. Re-read anyway.",g:"The SECOND I notice, I stop, back up to the last thing I remember. Catching it IS the skill."},{i:"My brain is moving faster than my hand while writing...",b:"I skip words, leave out context. The sentence only makes sense in MY head.",g:"PAUSE. Say the whole thought first. THEN write it. Slow hand + fast brain = clear writing."}],[{i:"Mom reminds me to do something and I feel annoyed...",b:"That's my brain saying: 'I wish I'd remembered myself.' The annoyance = I WANT independence.",g:"Instead of being annoyed, ask: 'How can I remember MYSELF next time?' Whiteboard. Alarm. System."},{i:"I want to tell someone about something but they look confused...",b:"I skipped context. I assumed they knew things because it's clear in MY head.",g:"Before talking, think: Does this person know the WHO, WHAT, WHERE? Start there."}],[{i:"I think 'this doesn't matter, it's just summer work'...",b:"7th grade Cristopher walks in behind. He struggles. He wishes summer-him had practiced.",g:"Every block now makes 7th grade EASIER. I'm building skills that make school less stressful."},{i:"I get to choose between fun NOW or finishing my last block...",b:"If I choose fun: I'll think about unfinished work the whole time. Not really fun.",g:"30 more minutes, then ACTUALLY free. No guilt, no cloud. Future Me thanks Past Me."}]];
+
+const QUOTES = [
+  {q:"Do or do not. There is no try.",a:"Yoda"},{q:"Your focus determines your reality.",a:"Qui-Gon Jinn"},
+  {q:"The greatest teacher, failure is.",a:"Yoda"},{q:"Hard work beats talent when talent doesn't work hard.",a:"Tim Notke"},
+  {q:"You don't have to be great to start, but you have to start to be great.",a:"Zig Ziglar"},
+  {q:"Every champion was once a contender who refused to give up.",a:"Rocky Balboa"},
+  {q:"A smooth sea never made a skilled sailor.",a:"Franklin D. Roosevelt"},
+  {q:"Truly wonderful, the mind of a child is.",a:"Yoda"},
+  {q:"In my experience there is no such thing as luck.",a:"Obi-Wan Kenobi"},
+  {q:"If everything was perfect, you would never learn.",a:"Beyonce"},
+];
+
+// ═══ Specific IXL skill links per week (scraped from your IXL account) ═══
+const IXL_LINKS = {
+  cristopher: {
+    reading: {
+      1: [{label:"IXL: Main idea (key details)",url:"https://www.ixl.com/ela/grade-4/use-key-details-to-determine-the-main-idea",cls:"link-ixl"},{label:"IXL: Main idea of a passage",url:"https://www.ixl.com/ela/grade-4/determine-the-main-idea-of-a-passage",cls:"link-ixl"}],
+      2: [{label:"IXL: Base words & affixes",url:"https://www.ixl.com/ela/grade-4/identify-base-words-prefixes-and-suffixes",cls:"link-ixl"},{label:"IXL: Prefix/suffix meanings",url:"https://www.ixl.com/ela/grade-4/determine-the-meanings-of-words-with-prefixes-and-suffixes-review",cls:"link-ixl"}],
+      3: [{label:"IXL: Context clues",url:"https://www.ixl.com/ela/grade-4/use-context-to-identify-the-meaning-of-a-word",cls:"link-ixl"},{label:"IXL: Find words using context",url:"https://www.ixl.com/ela/grade-4/find-words-using-context",cls:"link-ixl"}],
+      4: [{label:"IXL: Draw inferences",url:"https://www.ixl.com/ela/grade-4/draw-inferences-and-identify-supporting-details",cls:"link-ixl"},{label:"IXL: Inferences from text",url:"https://www.ixl.com/ela/grade-4/draw-inferences-from-a-text",cls:"link-ixl"}],
+      5: [{label:"IXL: Realistic fiction",url:"https://www.ixl.com/ela/grade-4/read-realistic-fiction-with-illustrations",cls:"link-ixl"},{label:"IXL: Realistic fiction (adv)",url:"https://www.ixl.com/ela/grade-4/read-realistic-fiction",cls:"link-ixl"}],
+      6: [{label:"IXL: Order of events",url:"https://www.ixl.com/ela/grade-4/determine-the-order-of-events-in-informational-texts",cls:"link-ixl"},{label:"IXL: Compare & contrast",url:"https://www.ixl.com/ela/grade-4/compare-and-contrast-in-informational-texts",cls:"link-ixl"}],
+      7: [{label:"IXL: Inferences from text",url:"https://www.ixl.com/ela/grade-4/draw-inferences-from-a-text",cls:"link-ixl"},{label:"IXL: Themes of stories",url:"https://www.ixl.com/ela/grade-4/determine-the-themes-of-short-stories",cls:"link-ixl"}],
+      8: [{label:"IXL: Points of view",url:"https://www.ixl.com/ela/grade-4/distinguish-points-of-view",cls:"link-ixl"},{label:"IXL: Author's purpose",url:"https://www.ixl.com/ela/grade-4/identify-the-authors-purpose-and-message",cls:"link-ixl"}],
+      9: [{label:"IXL: Read sci-fi",url:"https://www.ixl.com/ela/grade-4/read-science-fiction-with-illustrations",cls:"link-ixl"},{label:"IXL: Read poetry",url:"https://www.ixl.com/ela/grade-4/read-poetry",cls:"link-ixl"}],
+      10: [{label:"IXL: Combine main ideas",url:"https://www.ixl.com/ela/grade-4/combine-main-ideas-from-two-texts",cls:"link-ixl"},{label:"IXL: Main idea review",url:"https://www.ixl.com/ela/grade-4/use-key-details-to-determine-the-main-idea",cls:"link-ixl"}]
+    },
+    writing: {
+      1: [{label:"IXL: Sentence order",url:"https://www.ixl.com/ela/grade-4/put-the-sentences-in-order",cls:"link-ixl"},{label:"IXL: Sentence vs fragment",url:"https://www.ixl.com/ela/grade-4/is-it-a-complete-sentence-or-a-fragment",cls:"link-ixl"}],
+      2: [{label:"IXL: Complete subjects",url:"https://www.ixl.com/ela/grade-4/identify-the-complete-subject-of-a-sentence",cls:"link-ixl"},{label:"IXL: Complete predicates",url:"https://www.ixl.com/ela/grade-4/identify-the-complete-predicate-of-a-sentence",cls:"link-ixl"}],
+      3: [{label:"IXL: Varied sentences",url:"https://www.ixl.com/ela/grade-4/create-varied-sentences-based-on-models",cls:"link-ixl"},{label:"IXL: Stronger verbs",url:"https://www.ixl.com/ela/grade-4/revise-the-sentence-using-a-stronger-verb",cls:"link-ixl"}],
+      4: [{label:"IXL: Summarize a story",url:"https://www.ixl.com/ela/grade-4/summarize-a-story",cls:"link-ixl"},{label:"IXL: Best topic sentence",url:"https://www.ixl.com/ela/grade-4/choose-the-best-topic-sentence",cls:"link-ixl"}],
+      5: [{label:"IXL: Character emotions",url:"https://www.ixl.com/ela/grade-4/show-character-emotions-and-traits",cls:"link-ixl"},{label:"IXL: Add imagery",url:"https://www.ixl.com/ela/grade-4/add-imagery-to-stories",cls:"link-ixl"}],
+      6: [{label:"IXL: Punctuating dialogue",url:"https://www.ixl.com/ela/grade-4/punctuating-dialogue",cls:"link-ixl"},{label:"IXL: Actions & dialogue",url:"https://www.ixl.com/ela/grade-4/use-actions-and-dialogue-to-understand-characters",cls:"link-ixl"}],
+      7: [{label:"IXL: Concluding sentences",url:"https://www.ixl.com/ela/grade-4/choose-the-best-concluding-sentence",cls:"link-ixl"},{label:"IXL: Organize by topic",url:"https://www.ixl.com/ela/grade-4/organize-information-by-topic",cls:"link-ixl"}],
+      8: [{label:"IXL: Facts vs opinions",url:"https://www.ixl.com/ela/grade-4/distinguish-facts-from-opinions",cls:"link-ixl"},{label:"IXL: Support an opinion",url:"https://www.ixl.com/ela/grade-4/choose-reasons-to-support-an-opinion",cls:"link-ixl"}],
+      9: [{label:"IXL: Commas",url:"https://www.ixl.com/ela/grade-4/commas-with-a-series",cls:"link-ixl"},{label:"IXL: Error correction",url:"https://www.ixl.com/ela/grade-4/correct-errors-with-signs",cls:"link-ixl"}],
+      10: [{label:"IXL: Letter format",url:"https://www.ixl.com/ela/grade-4/greetings-and-closings-of-letters",cls:"link-ixl"},{label:"IXL: Capitalization review",url:"https://www.ixl.com/ela/grade-4/capitalization-review",cls:"link-ixl"}]
+    },
+    math: {
+      1: [{label:"IXL: Multiply facts to 10",url:"https://www.ixl.com/math/grade-4/multiplication-facts-to-10",cls:"link-ixl"},{label:"IXL: Multiply facts to 12",url:"https://www.ixl.com/math/grade-4/multiplication-facts-to-12",cls:"link-ixl"}],
+      2: [{label:"IXL: Divide 2-digit by 1-digit",url:"https://www.ixl.com/math/grade-4/divide-2-digit-numbers-by-1-digit-numbers-quotients-up-to-10",cls:"link-ixl"},{label:"IXL: Partial quotients",url:"https://www.ixl.com/math/grade-4/divide-using-partial-quotients",cls:"link-ixl"}],
+      3: [{label:"IXL: Multi-step word problems",url:"https://www.ixl.com/math/grade-4/multiply-1-digit-numbers-by-2-digit-numbers-multi-step-word-problems",cls:"link-ixl"}],
+      4: [{label:"IXL: Equivalent fractions",url:"https://www.ixl.com/math/grade-4/find-equivalent-fractions-using-area-models",cls:"link-ixl"},{label:"IXL: Fractions on number lines",url:"https://www.ixl.com/math/grade-4/identify-equivalent-fractions-using-number-lines",cls:"link-ixl"}],
+      5: [{label:"IXL: Fractions to decimals",url:"https://www.ixl.com/math/grade-4/convert-fractions-and-mixed-numbers-to-decimals-denominators-of-10-and-100",cls:"link-ixl"},{label:"IXL: Decimals to fractions",url:"https://www.ixl.com/math/grade-4/convert-decimals-to-fractions-and-mixed-numbers",cls:"link-ixl"}],
+      6: [{label:"IXL: Numerical expressions",url:"https://www.ixl.com/math/grade-5/write-numerical-expressions-one-operation",cls:"link-ixl"},{label:"IXL: Two-operation expressions",url:"https://www.ixl.com/math/grade-5/write-numerical-expressions-two-operations",cls:"link-ixl"}],
+      7: [{label:"IXL: Area & perimeter",url:"https://www.ixl.com/math/grade-4/compare-area-and-perimeter-of-rectangles-and-squares",cls:"link-ixl"},{label:"IXL: Solve area/perimeter",url:"https://www.ixl.com/math/grade-4/solve-problems-involving-the-area-and-perimeter-of-rectangles",cls:"link-ixl"}],
+      8: [{label:"IXL: Variable equations",url:"https://www.ixl.com/math/grade-5/write-variable-equations-word-problems",cls:"link-ixl"},{label:"IXL: Solve with unknowns",url:"https://www.ixl.com/math/grade-5/use-equations-with-unknown-numbers-to-solve-multi-step-word-problems",cls:"link-ixl"}],
+      9: [{label:"IXL: Fraction word problems",url:"https://www.ixl.com/math/grade-4/add-and-subtract-fractions-and-mixed-numbers-with-like-denominators-multi-step-word-problems",cls:"link-ixl"}],
+      10: [{label:"IXL: Multiplication patterns",url:"https://www.ixl.com/math/grade-4/multiplication-patterns-over-increasing-place-values",cls:"link-ixl"},{label:"IXL: Division patterns",url:"https://www.ixl.com/math/grade-4/division-patterns-over-increasing-place-values",cls:"link-ixl"}]
+    }
+  },
+  judah: {
+    reading: {
+      1: [{label:"IXL: Main idea (key details)",url:"https://www.ixl.com/ela/grade-3/use-key-details-to-determine-the-main-idea",cls:"link-ixl"},{label:"IXL: Main idea of passage",url:"https://www.ixl.com/ela/grade-3/determine-the-main-idea-of-a-passage",cls:"link-ixl"}],
+      2: [{label:"IXL: Long/short vowel sorting",url:"https://www.ixl.com/ela/grade-3/use-spelling-patterns-to-sort-long-and-short-vowel-words",cls:"link-ixl"},{label:"IXL: Long vowel stories",url:"https://www.ixl.com/ela/grade-3/read-long-vowel-stories",cls:"link-ixl"}],
+      3: [{label:"IXL: Understand characters",url:"https://www.ixl.com/ela/grade-3/use-actions-and-dialogue-to-understand-characters",cls:"link-ixl"},{label:"IXL: Compare two texts",url:"https://www.ixl.com/ela/grade-3/compare-information-from-two-informational-texts",cls:"link-ixl"}],
+      4: [{label:"IXL: Read fantasy",url:"https://www.ixl.com/ela/grade-3/read-fantasy-with-illustrations",cls:"link-ixl"},{label:"IXL: Read realistic fiction",url:"https://www.ixl.com/ela/grade-3/read-realistic-fiction-with-illustrations",cls:"link-ixl"}],
+      5: [{label:"IXL: Main idea review",url:"https://www.ixl.com/ela/grade-3/use-key-details-to-determine-the-main-idea",cls:"link-ixl"},{label:"IXL: Main idea of passage",url:"https://www.ixl.com/ela/grade-3/determine-the-main-idea-of-a-passage",cls:"link-ixl"}],
+      6: [{label:"IXL: Compare two texts",url:"https://www.ixl.com/ela/grade-3/compare-information-from-two-informational-texts",cls:"link-ixl"},{label:"IXL: Order of events",url:"https://www.ixl.com/ela/grade-3/determine-the-order-of-events-in-informational-texts",cls:"link-ixl"}],
+      7: [{label:"IXL: Prefixes & suffixes",url:"https://www.ixl.com/ela/grade-3/segment-and-read-words-with-prefixes-or-suffixes",cls:"link-ixl"},{label:"IXL: Base words & affixes",url:"https://www.ixl.com/ela/grade-3/identify-base-words-prefixes-and-suffixes",cls:"link-ixl"}],
+      8: [{label:"IXL: Sentence or fragment?",url:"https://www.ixl.com/ela/grade-3/is-it-a-complete-sentence-or-a-fragment",cls:"link-ixl"},{label:"IXL: Sentence/fragment/run-on",url:"https://www.ixl.com/ela/grade-3/is-it-a-complete-sentence-a-fragment-or-a-run-on",cls:"link-ixl"}],
+      9: [{label:"IXL: Themes of fables",url:"https://www.ixl.com/ela/grade-3/determine-the-themes-of-myths-fables-and-folktales",cls:"link-ixl"},{label:"IXL: Draw inferences",url:"https://www.ixl.com/ela/grade-3/draw-inferences-from-a-text",cls:"link-ixl"}],
+      10: [{label:"IXL: Main idea review",url:"https://www.ixl.com/ela/grade-3/use-key-details-to-determine-the-main-idea",cls:"link-ixl"},{label:"IXL: Main idea of passage",url:"https://www.ixl.com/ela/grade-3/determine-the-main-idea-of-a-passage",cls:"link-ixl"}]
+    },
+    writing: {
+      1: [{label:"IXL: Spelling patterns",url:"https://www.ixl.com/ela/grade-3/use-spelling-patterns-to-sort-long-and-short-vowel-words",cls:"link-ixl"},{label:"IXL: Rhyming riddles",url:"https://www.ixl.com/ela/grade-3/spell-rhyming-words-to-answer-riddles",cls:"link-ixl"}],
+      2: [{label:"IXL: Spell long a words",url:"https://www.ixl.com/ela/grade-3/spell-the-long-a-word-silent-e-ai-ay-ea-ey-eigh",cls:"link-ixl"},{label:"IXL: Spell long e words",url:"https://www.ixl.com/ela/grade-3/spell-the-long-e-word-silent-e-ee-ea-ie",cls:"link-ixl"}],
+      3: [{label:"IXL: Spell long i words",url:"https://www.ixl.com/ela/grade-3/spell-the-long-i-word-silent-e-ie-y-igh-ind-ild",cls:"link-ixl"}],
+      4: [{label:"IXL: Rhyming riddles",url:"https://www.ixl.com/ela/grade-3/spell-rhyming-words-to-answer-riddles",cls:"link-ixl"},{label:"IXL: Spelling patterns",url:"https://www.ixl.com/ela/grade-3/use-spelling-patterns-to-sort-long-and-short-vowel-words",cls:"link-ixl"}],
+      5: [{label:"IXL: Identify homophones",url:"https://www.ixl.com/ela/grade-3/identify-homophones",cls:"link-ixl"},{label:"IXL: Use correct homophone",url:"https://www.ixl.com/ela/grade-3/use-the-correct-homophone",cls:"link-ixl"}],
+      6: [{label:"IXL: Choose the synonym",url:"https://www.ixl.com/ela/grade-3/choose-the-synonym",cls:"link-ixl"},{label:"IXL: Choose the antonym",url:"https://www.ixl.com/ela/grade-3/choose-the-antonym",cls:"link-ixl"}],
+      7: [{label:"IXL: Base words & affixes",url:"https://www.ixl.com/ela/grade-3/identify-base-words-prefixes-and-suffixes",cls:"link-ixl"},{label:"IXL: Read prefixed words",url:"https://www.ixl.com/ela/grade-3/segment-and-read-words-with-prefixes-or-suffixes",cls:"link-ixl"}],
+      8: [{label:"IXL: Sentence or fragment?",url:"https://www.ixl.com/ela/grade-3/is-it-a-complete-sentence-or-a-fragment",cls:"link-ixl"},{label:"IXL: Fragment or run-on?",url:"https://www.ixl.com/ela/grade-3/is-it-a-complete-sentence-a-fragment-or-a-run-on",cls:"link-ixl"}],
+      9: [{label:"IXL: Spelling patterns",url:"https://www.ixl.com/ela/grade-3/use-spelling-patterns-to-sort-long-and-short-vowel-words",cls:"link-ixl"},{label:"IXL: Rhyming riddles",url:"https://www.ixl.com/ela/grade-3/spell-rhyming-words-to-answer-riddles",cls:"link-ixl"}],
+      10: [{label:"IXL: Suffix spelling review",url:"https://www.ixl.com/ela/grade-3/spell-words-with-suffixes-review",cls:"link-ixl"},{label:"IXL: Blends & digraphs review",url:"https://www.ixl.com/ela/grade-3/spell-words-with-blends-and-digraphs-review",cls:"link-ixl"}]
+    },
+    math: {
+      1: [{label:"IXL: Add/subtract on number lines",url:"https://www.ixl.com/math/grade-3/use-number-lines-to-add-and-subtract-three-digit-numbers",cls:"link-ixl"}],
+      2: [{label:"IXL: Multiply facts 2-5",url:"https://www.ixl.com/math/grade-3/multiplication-facts-for-2-3-4-5-and-10",cls:"link-ixl"},{label:"IXL: Multiply word problems",url:"https://www.ixl.com/math/grade-3/multiplication-word-problems-with-factors-up-to-5",cls:"link-ixl"}],
+      3: [{label:"IXL: Multiply facts 6-9",url:"https://www.ixl.com/math/grade-3/multiplication-facts-for-6-7-8-and-9",cls:"link-ixl"},{label:"IXL: Multiply facts to 10",url:"https://www.ixl.com/math/grade-3/multiplication-facts-up-to-10",cls:"link-ixl"}],
+      4: [{label:"IXL: Divide equal groups",url:"https://www.ixl.com/math/grade-3/divide-by-counting-equal-groups",cls:"link-ixl"},{label:"IXL: Division word problems",url:"https://www.ixl.com/math/grade-3/use-equal-groups-to-solve-division-word-problems",cls:"link-ixl"}],
+      5: [{label:"IXL: Two-step word problems",url:"https://www.ixl.com/math/grade-3/two-step-mixed-operation-word-problems",cls:"link-ixl"}],
+      6: [{label:"IXL: Perimeter of shapes",url:"https://www.ixl.com/math/grade-3/perimeter-of-rectilinear-shapes",cls:"link-ixl"},{label:"IXL: Perimeter of polygons",url:"https://www.ixl.com/math/grade-3/perimeter-of-polygons",cls:"link-ixl"}],
+      7: [{label:"IXL: Fractions with models",url:"https://www.ixl.com/math/grade-3/match-fractions-to-models-halves-thirds-and-fourths",cls:"link-ixl"},{label:"IXL: Make halves & thirds",url:"https://www.ixl.com/math/grade-3/make-halves-thirds-and-fourths",cls:"link-ixl"}],
+      8: [{label:"IXL: Elapsed time",url:"https://www.ixl.com/math/grade-3/find-the-elapsed-time",cls:"link-ixl"},{label:"IXL: Time word problems",url:"https://www.ixl.com/math/grade-3/find-the-elapsed-time-word-problems",cls:"link-ixl"}],
+      9: [{label:"IXL: Two-step word problems",url:"https://www.ixl.com/math/grade-3/two-step-mixed-operation-word-problems",cls:"link-ixl"}],
+      10: [{label:"IXL: Data from tables",url:"https://www.ixl.com/math/grade-3/add-and-subtract-data-from-tables",cls:"link-ixl"},{label:"IXL: Patterns in tables",url:"https://www.ixl.com/math/grade-3/identify-multiplication-patterns-in-tables",cls:"link-ixl"}]
+    }
+  }
+};
+const KHAN_LINKS = {
+  cristopher: {1:{label:"Khan: Multiplication",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2",cls:"link-khan"},2:{label:"Khan: Division",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2",cls:"link-khan"},3:{label:"Khan: Word Problems",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2",cls:"link-khan"},4:{label:"Khan: Fractions",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-fractions-2",cls:"link-khan"},5:{label:"Khan: Decimals",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-decimals",cls:"link-khan"},6:{label:"Khan: Expressions",url:"https://www.khanacademy.org/math/cc-fifth-grade-math/imp-algebraic-thinking",cls:"link-khan"},7:{label:"Khan: Geometry",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-geometry-2",cls:"link-khan"},8:{label:"Khan: Algebra Intro",url:"https://www.khanacademy.org/math/cc-fifth-grade-math/imp-algebraic-thinking",cls:"link-khan"},9:{label:"Khan: Mixed Review",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-multiplication-and-division-2",cls:"link-khan"},10:{label:"Khan: Patterns",url:"https://www.khanacademy.org/math/cc-fourth-grade-math/imp-factors-multiples-and-patterns",cls:"link-khan"}},
+  judah: {1:{label:"Khan: Addition",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-addition-and-subtraction",cls:"link-khan"},2:{label:"Khan: Multiplication",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-multiplication-and-division",cls:"link-khan"},3:{label:"Khan: Multiplication",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-multiplication-and-division",cls:"link-khan"},4:{label:"Khan: Division",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-multiplication-and-division",cls:"link-khan"},5:{label:"Khan: Mixed Ops",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-addition-and-subtraction",cls:"link-khan"},6:{label:"Khan: Geometry",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-geometry",cls:"link-khan"},7:{label:"Khan: Fractions",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-fractions",cls:"link-khan"},8:{label:"Khan: Measurement",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-measurement-and-data",cls:"link-khan"},9:{label:"Khan: Word Problems",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-addition-and-subtraction",cls:"link-khan"},10:{label:"Khan: Data",url:"https://www.khanacademy.org/math/cc-third-grade-math/imp-measurement-and-data",cls:"link-khan"}}
+};
+const SPANISH_LINKS = {
+  1:[{label:"IXL: Spanish alphabet",url:"https://www.ixl.com/spanish/the-spanish-alphabet",cls:"link-ixl"}],
+  2:[{label:"IXL: Family & pets",url:"https://www.ixl.com/spanish/recognize-immediate-family-members-and-pets",cls:"link-ixl"},{label:"IXL: Name family members",url:"https://www.ixl.com/spanish/name-immediate-family-members-and-pets",cls:"link-ixl"}],
+  3:[{label:"IXL: Greetings & goodbyes",url:"https://www.ixl.com/spanish/greeting-people-and-saying-goodbye",cls:"link-ixl"},{label:"IXL: Introductions",url:"https://www.ixl.com/spanish/introductions",cls:"link-ixl"}],
+  4:[{label:"IXL: Fruits & vegetables",url:"https://www.ixl.com/spanish/recognize-fruits-and-vegetables",cls:"link-ixl"},{label:"IXL: Name fruits & vegs",url:"https://www.ixl.com/spanish/name-fruits-and-vegetables",cls:"link-ixl"}],
+  5:[{label:"IXL: Days of the week",url:"https://www.ixl.com/spanish/days-of-the-week",cls:"link-ixl"},{label:"IXL: Months of the year",url:"https://www.ixl.com/spanish/months-of-the-year",cls:"link-ixl"}],
+  6:[{label:"IXL: Weather & seasons",url:"https://www.ixl.com/spanish/weather-and-seasons",cls:"link-ixl"}],
+  7:[{label:"IXL: School subjects",url:"https://www.ixl.com/spanish/name-school-subjects",cls:"link-ixl"},{label:"IXL: School supplies",url:"https://www.ixl.com/spanish/name-school-supplies",cls:"link-ixl"}],
+  8:[{label:"IXL: Present tense -ar verbs",url:"https://www.ixl.com/spanish/select-the-correct-present-tense-form-of-regular-ar-verbs",cls:"link-ixl"}],
+  9:[{label:"IXL: Describe appearance",url:"https://www.ixl.com/spanish/recognize-adjectives-that-describe-appearance",cls:"link-ixl"},{label:"IXL: Appearance adjectives",url:"https://www.ixl.com/spanish/provide-adjectives-that-describe-appearance",cls:"link-ixl"}],
+  10:[{label:"IXL: Telling time",url:"https://www.ixl.com/spanish/telling-time-provide-complete-sentences",cls:"link-ixl"},{label:"IXL: Sports & hobbies",url:"https://www.ixl.com/spanish/write-sentences-that-are-true-for-you-about-sports-hobbies-and-free-time",cls:"link-ixl"}]
+};
+const SPANISH_DESC = {
+  1:"Learn the Spanish alphabet and numbers 0-10. Practice saying them aloud!",
+  2:"Family vocabulary: learn to name family members and pets in Spanish.",
+  3:"Greetings and introductions: say hello, goodbye, and introduce yourself.",
+  4:"Food vocabulary: name fruits, vegetables, and meals in Spanish.",
+  5:"Days of the week and months of the year. When is your birthday?",
+  6:"Weather and seasons: describe what it's like outside in Spanish.",
+  7:"School vocabulary: name classroom objects and school subjects.",
+  8:"Intro to verbs: learn present tense -ar verb conjugations.",
+  9:"Describing people: adjectives for appearance and personality.",
+  10:"Putting it together: telling time, asking questions, full sentences!"
+};
+
+// ═══ State ═══
+let profile = null, week = 1, day = 'mon';
+let checkedBlocks = new Set();
+let timerSec = 1800, timerTotal = 1800, timerInt = null, timerOn = false;
+
+// Auto-detect today's day of week
+function autoDetectDay() {
+  const jsDay = new Date().getDay(); // 0=Sun, 1=Mon...
+  if (jsDay >= 1 && jsDay <= 5) day = DAY_KEYS[jsDay - 1];
+  else day = 'mon'; // default to Monday on weekends
+}
+
+// ═══ Profile ═══
+function selectProfile(p) {
+  profile = p;
+  autoDetectDay();
+  document.getElementById('profileScreen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  const d = DATA[p];
+  document.getElementById('bannerName').textContent = d.title;
+  document.getElementById('bannerDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  buildNav();
+  changeWeek(1);
+  showSec('checkin'); // Check-in is ALWAYS the landing page
+}
+function switchProfile() {
+  document.getElementById('profileScreen').classList.remove('hidden');
+  document.getElementById('app').classList.add('hidden');
+  if(timerInt) clearInterval(timerInt);
+  timerOn = false;
+  checkedBlocks = new Set();
+}
+
+// ═══ Nav ═══
+function buildNav() {
+  const d = DATA[profile];
+  let tabs = [
+    {id:'checkin',icon:'☀️',label:'Check-In'},
+    {id:'today',icon:'📋',label:"Today's Plan"},
+  ];
+  if(d.hasEF) tabs.push({id:'stopcheck',icon:'🛑',label:'STOP & CHECK'},{id:'ifthen',icon:'🔀',label:'If → Then'});
+  tabs.push({id:'timer',icon:'⏱️',label:'Timer'},{id:'wrapup',icon:'🏁',label:'Wrap-Up'});
+  const nav = document.getElementById('navBar');
+  nav.innerHTML = tabs.map((t,i) =>
+    `<button onclick="showSec('${t.id}')" class="${i===0?'active':''}" data-sec="${t.id}">${t.icon} ${t.label}</button>`
+  ).join('');
+}
+function showSec(id) {
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('sec-'+id);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>{b.classList.toggle('active',b.dataset.sec===id)});
+  window.scrollTo(0,0);
+}
+
+// ═══ Week / Day Change ═══
+function changeWeek(w) {
+  week = parseInt(w);
+  document.getElementById('weekSelect').value = w;
+  checkedBlocks = new Set();
+  renderAll();
+}
+function changeDay(d) {
+  day = d;
+  checkedBlocks = new Set();
+  renderAll();
+  showSec('today');
+}
+
+// ═══ Block check toggling ═══
+function toggleBlock(key) {
+  if (checkedBlocks.has(key)) checkedBlocks.delete(key);
+  else checkedBlocks.add(key);
+  updateProgressUI();
+  // Toggle the visual state of the block item
+  const el = document.getElementById('block-' + key);
+  if (el) el.classList.toggle('done', checkedBlocks.has(key));
+  // Show/hide finish button
+  updateFinishBtn();
+}
+
+function getTodayBlocks() {
+  return DAILY_SCHED[day].blocks;
+}
+
+function updateProgressUI() {
+  const blocks = getTodayBlocks();
+  const total = blocks.length;
+  const done = blocks.filter(b => checkedBlocks.has(b)).length;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  const fill = document.getElementById('progressFill');
+  const pctEl = document.getElementById('progressPct');
+  const label = document.getElementById('progressLabel');
+  if (fill) {
+    fill.style.width = pct + '%';
+    fill.classList.toggle('complete', pct === 100);
+  }
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (label) label.textContent = done + ' of ' + total + ' blocks done';
+}
+
+function updateFinishBtn() {
+  const blocks = getTodayBlocks();
+  const allDone = blocks.every(b => checkedBlocks.has(b));
+  const btn = document.getElementById('finishDayBtn');
+  if (btn) {
+    btn.classList.toggle('hidden', false);
+    if (allDone) {
+      btn.className = 'btn btn-gold btn-lg';
+      btn.innerHTML = '🏁 All Done! Finish the Day →';
+    } else {
+      btn.className = 'btn btn-outline btn-lg';
+      btn.innerHTML = '⏩ Skip to Wrap-Up →';
+    }
+  }
+}
+
+// ═══ RENDER ═══
+function renderAll() {
+  const d = DATA[profile];
+  const wk = d.weeks[week-1];
+  const main = document.getElementById('mainContent');
+  const q = QUOTES[(new Date().getDate() + week) % QUOTES.length];
+  const sched = DAILY_SCHED[day];
+  const dayIdx = DAY_KEYS.indexOf(day);
+
+  let html = '';
+
+  // ═══ CHECK-IN (Landing Page) ═══
+  html += `<div class="sec active" id="sec-checkin"><div class="card fade" style="border-left:4px solid var(--gold)">`;
+  html += `<h2>Good Morning, ${d.name}! ${d.emoji}</h2>`;
+  html += `<div class="quote-box"><div class="qt">"${q.q}"</div><div class="au">— ${q.a}</div></div>`;
+  if(d.hasEF) html += `<p style="text-align:center;font-size:1.1rem"><strong>Future ${d.name}</strong> is counting on you today.</p>`;
+  html += `<h3>How are you feeling?</h3><div class="mood-row">`;
+  ['😫','😐','🙂','😊','🔥'].forEach(m => {
+    html += `<button class="mood-btn" onclick="this.parentElement.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${m}</button>`;
+  });
+  html += `</div>`;
+  if(d.hasEF){
+    html += `<div class="prompt"><div class="q">What is ONE thing I want to get better at today?</div><textarea placeholder="Today I want to..."></textarea></div>`;
+    html += `<div class="prompt"><div class="q">Picture yourself DONE at 11:30. How will you feel? What will you do with free time?</div><textarea placeholder="When I'm done I'll feel..."></textarea></div>`;
+  }
+  html += `<h3>Before-I-Start Checklist</h3><ul class="cklist">`;
+  ['Workspace is clear','Notebook + pencil ready','Device charged and open','Water bottle filled','Headphones ready','Deep breath — ready to go!'].forEach(item => {
+    html += `<li><input type="checkbox"><label>${item}</label></li>`;
+  });
+  html += `</ul>`;
+  html += `<div class="step-nav"><div></div><button class="btn btn-gold btn-lg" onclick="showSec('today')">I'm Ready — Show Today's Plan →</button></div>`;
+  html += `</div></div>`;
+
+  // ═══ TODAY'S PLAN ═══
+  html += `<div class="sec" id="sec-today">`;
+
+  // Week + Day header
+  html += `<div class="card fade" style="border-left:4px solid var(--gold)">`;
+  html += `<h2>Week ${week}: ${wk.theme}</h2>`;
+  html += `<p style="font-style:italic;color:var(--gold);font-weight:600;margin-bottom:4px">Code Name: "${wk.code}"</p>`;
+  html += `<p style="margin-bottom:0">🧪 <strong>This week's experiment:</strong> ${wk.experiment}</p></div>`;
+
+  // Day selector
+  html += `<div class="day-bar">`;
+  DAY_KEYS.forEach(dk => {
+    const ds = DAILY_SCHED[dk];
+    const isActive = dk === day;
+    html += `<button class="day-btn ${isActive?'active':''}" onclick="changeDay('${dk}')"><span>${ds.label}</span></button>`;
+  });
+  html += `</div>`;
+
+  // Day info badge
+  html += `<div style="text-align:center;margin-bottom:20px"><span style="background:rgba(244,185,66,.1);color:var(--gold);padding:6px 18px;border-radius:20px;font-weight:700;font-size:.9rem;border:1px solid rgba(244,185,66,.2)">${sched.full} — ${sched.note}</span></div>`;
+
+  // Progress bar
+  const blocks = sched.blocks;
+  const doneCnt = blocks.filter(b => checkedBlocks.has(b)).length;
+  const pct = blocks.length > 0 ? Math.round((doneCnt / blocks.length) * 100) : 0;
+  html += `<div class="progress-wrap"><div class="progress-label"><span id="progressLabel">${doneCnt} of ${blocks.length} blocks done</span><span class="pct" id="progressPct">${pct}%</span></div>`;
+  html += `<div class="progress-track"><div class="progress-fill ${pct===100?'complete':''}" id="progressFill" style="width:${pct}%"></div></div></div>`;
+
+  // Block definitions
+  const BLOCK_META = {
+    typing: {icon:'⌨️', name:'Typing Warm-Up', time:'10-15 min'},
+    reading: {icon:'📖', name:'Reading & Comprehension', time:'25-30 min'},
+    writing: {icon:'✏️', name: d.hasEF ? 'Language & Writing' : 'Spelling & Writing', time:'25-30 min'},
+    math: {icon:'🔢', name:'Math', time:'25-30 min'},
+    project: {icon:'🛠️', name:'Project / Hands-On', time:'30 min'},
+    experiment: {icon:'🧪', name:'Experiment!', time:'30-45 min'},
+    spanish: {icon:'🇪🇸', name:'Spanish', time:'15-20 min'}
+  };
+
+  // Helper: get specific IXL links for a subject this week
+  function getSpecificLinks(subject) {
+    const ixl = IXL_LINKS[profile];
+    if (ixl && ixl[subject] && ixl[subject][week]) return ixl[subject][week];
+    return [];
+  }
+
+  // Render each block for today
+  blocks.forEach(key => {
+    const meta = BLOCK_META[key];
+    const isDone = checkedBlocks.has(key);
+    let blockData, tip, specificLinks = [];
+
+    if (key === 'experiment') {
+      blockData = {desc: wk.experiment, links: []};
+      tip = 'Lab day! Follow the steps, observe carefully, and record your findings.';
+    } else if (key === 'spanish') {
+      blockData = {desc: SPANISH_DESC[week] || 'Practice Spanish on IXL!', links: []};
+      specificLinks = SPANISH_LINKS[week] || [];
+      tip = 'Short and fun — learn a little Spanish each week!';
+    } else {
+      blockData = wk[key];
+      tip = DAY_TIPS[key] ? DAY_TIPS[key][dayIdx] : '';
+      // Get specific IXL links for reading/writing/math
+      if (key === 'reading' || key === 'writing' || key === 'math') {
+        specificLinks = getSpecificLinks(key);
+      }
+    }
+
+    // For math, also add Khan Academy link
+    let khanLink = null;
+    if (key === 'math' && KHAN_LINKS[profile] && KHAN_LINKS[profile][week]) {
+      khanLink = KHAN_LINKS[profile][week];
+    }
+
+    html += `<div class="block-item fade ${isDone?'done':''}" id="block-${key}">`;
+    html += `<div class="block-header">`;
+    html += `<div class="block-label"><span class="block-icon">${meta.icon}</span><span class="block-name">${meta.name}</span><span class="block-done-badge">✓ Done</span></div>`;
+    html += `<div style="display:flex;align-items:center;gap:10px"><span class="block-time">${meta.time}</span>`;
+    html += `<input type="checkbox" class="block-check" ${isDone?'checked':''} onchange="toggleBlock('${key}')" title="Mark as done"></div>`;
+    html += `</div>`;
+    if (tip) html += `<div class="block-tip">📌 Today: ${tip}</div>`;
+    html += `<div class="block-desc">${blockData.desc}</div>`;
+    html += `<div class="block-links">`;
+    // Use specific IXL links if available, otherwise fall back to generic
+    if (specificLinks.length > 0) {
+      html += specificLinks.map(l=>`<a href="${l.url}" target="_blank" class="block-link ${l.cls}">${l.label} ↗</a>`).join('');
+    }
+    if (blockData.links && blockData.links.length > 0) {
+      // Add non-IXL links from the original data (Epic, Goblin, etc.)
+      const extras = blockData.links.filter(l => !l.cls.includes('link-ixl') || specificLinks.length === 0);
+      html += extras.map(l=>`<a href="${l.url}" target="_blank" class="block-link ${l.cls}">${l.label} ↗</a>`).join('');
+    }
+    if (khanLink) html += `<a href="${khanLink.url}" target="_blank" class="block-link ${khanLink.cls}">${khanLink.label} ↗</a>`;
+    html += ` <button class="block-link link-start" onclick="showSec('timer')">⏱️ Start Timer</button>`;
+    if(d.hasEF && (key==='reading'||key==='writing')) html += ` <button class="block-link link-check" onclick="showSec('stopcheck')">🛑 STOP & CHECK</button>`;
+    html += `</div></div>`;
+  });
+
+  // Finish Day / Skip to Wrap-Up button
+  const allDone = blocks.every(b => checkedBlocks.has(b));
+  html += `<div class="step-nav"><button class="btn btn-outline" onclick="showSec('checkin')">← Back to Check-In</button>`;
+  if (allDone) {
+    html += `<button class="btn btn-gold btn-lg" id="finishDayBtn" onclick="showSec('wrapup')">🏁 All Done! Finish the Day →</button>`;
+  } else {
+    html += `<button class="btn btn-outline btn-lg" id="finishDayBtn" onclick="showSec('wrapup')">⏩ Skip to Wrap-Up →</button>`;
+  }
+  html += `</div></div>`;
+
+  // ═══ STOP & CHECK (Cristopher only) ═══
+  if(d.hasEF){
+    html += `<div class="sec" id="sec-stopcheck">`;
+    html += `<div class="stop-banner"><h3>🛑 STOP & CHECK</h3><p>Use EVERY time you finish a paragraph or feel yourself speeding up.</p></div>`;
+    html += `<div class="card fade" style="border-left:4px solid var(--red)"><h2>Reading Check</h2><p>After every paragraph, honestly answer:</p>`;
+    html += `<div class="checks" style="margin:16px 0">`;
+    ['Did I read EVERY word? (No skipping!)','Do I know what all the words mean?','Can I say what just happened IN MY OWN WORDS?','Does it make sense with what came before?'].forEach(c => {
+      html += `<label class="chk"><input type="checkbox"> ${c}</label>`;
+    });
+    html += `</div><p style="text-align:center;font-size:.88rem;color:var(--textl)">All checked? Keep going! Any unchecked? Re-read that paragraph.</p></div>`;
+
+    html += `<div class="card fade" style="border-left:4px solid var(--purple)"><h2>Writing Check</h2><p>Before and after each sentence:</p>`;
+    html += `<div class="checks" style="margin:16px 0">`;
+    ['Did I picture the whole thought first?','Did I say it silently to myself?','Does it include WHO?','Does it include WHAT happened?','Would someone else understand this?','Did I re-read it out loud?'].forEach(c => {
+      html += `<label class="chk"><input type="checkbox"> ${c}</label>`;
+    });
+    html += `</div></div>`;
+
+    html += `<div class="card fade" style="border-left:4px solid var(--blue)"><h2>Word Attack Plan</h2><p>Don't guess — follow these steps:</p>`;
+    html += `<ol class="step-list">`;
+    [{n:'1',t:'<strong>STOP.</strong> Don\'t read past it.'},{n:'2',t:'<strong>Break into chunks.</strong> Sound out each piece.'},{n:'3',t:'<strong>Blend together.</strong> Say the whole word slowly.'},{n:'4',t:'<strong>Sound right?</strong> Is it a real word?'},{n:'5',t:'<strong>Make sense?</strong> Does it fit the sentence?'},{n:'6',t:'<strong>Don\'t know it?</strong> Write it down. Look it up.'}].forEach(s => {
+      html += `<li><span class="step-num">${s.n}</span><span>${s.t}</span></li>`;
+    });
+    html += `</ol></div>`;
+    html += `<div class="step-nav"><button class="btn btn-outline" onclick="showSec('today')">← Back to Today's Plan</button><button class="btn btn-blue" onclick="showSec('ifthen')">If → Then Maps →</button></div>`;
+    html += `</div>`;
+
+    // ═══ IF → THEN ═══
+    html += `<div class="sec" id="sec-ifthen"><div class="card fade"><h2>If → Then Decision Maps</h2><p>Think through these BEFORE they happen. New scenarios every 2 weeks.</p></div>`;
+    const setIdx = Math.min(Math.floor((week-1)/2), IF_THEN.length-1);
+    IF_THEN[setIdx].forEach(s=>{
+      html += `<div class="ift fade"><div class="ift-if">IF... ${s.i}</div><div class="ift-body">`;
+      html += `<div class="ift-bad"><div class="ift-label" style="color:#c0392b">❌ What happens:</div>${s.b}</div>`;
+      html += `<div class="ift-good"><div class="ift-label" style="color:#1e7e34">✅ Better choice:</div>${s.g}</div></div></div>`;
+    });
+    html += `<div class="card fade" style="border-left:4px solid var(--purple)"><h2>Build Your Own</h2>`;
+    html += `<div class="prompt"><div class="q">IF I... (the situation)</div><textarea placeholder="IF I don't pack my bag tonight..."></textarea></div>`;
+    html += `<div class="prompt" style="border-color:var(--red)"><div class="q">THEN... (what happens)</div><textarea placeholder="THEN tomorrow I'll be rushing..."></textarea></div>`;
+    html += `<div class="prompt" style="border-color:var(--green)"><div class="q">BETTER: IF I instead...</div><textarea placeholder="IF I pack tonight, THEN tomorrow I can relax..."></textarea></div></div>`;
+    html += `<div class="step-nav"><button class="btn btn-outline" onclick="showSec('stopcheck')">← STOP & CHECK</button><button class="btn btn-blue" onclick="showSec('today')">Back to Today's Plan →</button></div>`;
+    html += `</div>`;
+  }
+
+  // ═══ TIMER ═══
+  html += `<div class="sec" id="sec-timer"><div class="card fade"><div class="timer-box">`;
+  html += `<h2>Block Timer</h2><p style="color:var(--textl)">Pick your time, hit start.</p>`;
+  html += `<div class="timer-presets"><button class="tpreset" onclick="setTm(15,this)">15m</button><button class="tpreset on" onclick="setTm(30,this)">30m</button><button class="tpreset" onclick="setTm(45,this)">45m</button><button class="tpreset" onclick="setTm(60,this)">60m</button></div>`;
+  html += `<div class="timer-num" id="tDisp">30:00</div>`;
+  html += `<div class="timer-btns"><button class="btn btn-green btn-lg" id="tBtn" onclick="togTm()">▶ Start</button><button class="btn btn-outline" onclick="rstTm()">↺ Reset</button></div>`;
+  html += `<div id="tDone" class="hidden" style="margin-top:20px"><div style="font-size:2rem">🎉</div><h3 style="color:var(--green)">Block Done!</h3><p>Check it off on your plan and start the next one!</p><button class="btn btn-gold" onclick="showSec('today')" style="margin-top:8px">Back to Today's Plan →</button></div>`;
+  html += `</div></div>`;
+
+  // Mid-block check-in (Cristopher only)
+  if(d.hasEF){
+    html += `<div class="card fade" style="border-left:4px solid var(--gold)"><h2>⚡ Mid-Block Check</h2><p>Halfway through, ask yourself:</p>`;
+    html += `<ul class="cklist"><li><input type="checkbox"><label>Am I still focused, or did my mind wander?</label></li><li><input type="checkbox"><label>Am I rushing or taking my time?</label></li><li><input type="checkbox"><label>Am I on track to finish what I planned?</label></li></ul></div>`;
+  }
+  html += `<div class="step-nav"><button class="btn btn-outline" onclick="showSec('today')">← Back to Today's Plan</button><div></div></div>`;
+  html += `</div>`;
+
+  // ═══ WRAP-UP ═══
+  html += `<div class="sec" id="sec-wrapup"><div class="card fade" style="border-left:4px solid var(--green)"><h2>🏁 Day Wrap-Up</h2>`;
+  if(d.hasEF){
+    html += `<div class="prompt"><div class="q">⏱️ How long did it ACTUALLY take today?</div>`;
+    html += `<div style="display:flex;gap:10px;align-items:center;justify-content:center"><input type="number" class="est-input" id="actTime" placeholder="?" min="1" max="240"><span style="font-weight:600">minutes total</span>`;
+    html += `<button class="btn btn-blue" onclick="cmpTime()">Compare</button></div><div id="cmpResult" style="margin-top:10px"></div></div>`;
+  }
+  html += `<div class="prompt"><div class="q">Rate your FOCUS today (1-5)</div><div class="mood-row">`;
+  for(let i=1;i<=5;i++) html += `<button class="mood-btn" onclick="this.parentElement.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));this.classList.add('sel')">${i}</button>`;
+  html += `</div></div>`;
+  html += `<div class="prompt"><div class="q">What was the hardest part today?</div><textarea placeholder="The hardest part was..."></textarea></div>`;
+  html += `<div class="prompt"><div class="q">What would I do differently tomorrow?</div><textarea placeholder="Tomorrow I would..."></textarea></div>`;
+  if(d.hasEF){
+    html += `<h3 style="margin-top:20px">End of Day Reflection</h3>`;
+    html += `<div class="prompt"><div class="q">What did Future ${d.name} appreciate about today?</div><textarea placeholder="Because I did my work today..."></textarea></div>`;
+    html += `<div class="prompt"><div class="q">One thing I'm proud of:</div><textarea placeholder="I'm proud that I..."></textarea></div>`;
+    html += `<h3>Tomorrow Prep</h3><ul class="cklist">`;
+    ['Device is charging','Notebook + pencil at station','I know what I\'m working on tomorrow','Workspace is clean'].forEach(item => {
+      html += `<li><input type="checkbox"><label>${item}</label></li>`;
+    });
+    html += `</ul>`;
+  }
+  html += `<div style="text-align:center;margin-top:24px"><button class="btn btn-gold btn-lg" onclick="dayDone()">✨ Done for today!</button></div>`;
+  html += `<div id="dayDoneMsg" class="hidden" style="text-align:center;margin-top:20px;padding:28px;background:rgba(46,204,113,.08);border:1px solid rgba(46,204,113,.2);border-radius:16px">`;
+  html += `<div style="font-size:3rem">🏆</div><h3 style="color:var(--green);font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin:12px 0">Amazing work, ${d.name}!</h3>`;
+  html += `<p style="color:var(--textl);margin:0">Every day you show up, you get stronger. See you tomorrow!</p></div>`;
+  html += `<div class="step-nav"><button class="btn btn-outline" onclick="showSec('today')">← Back to Today's Plan</button><div></div></div>`;
+  html += `</div></div>`;
+
+  main.innerHTML = html;
+  timerSec = 1800; timerTotal = 1800;
+}
+
+// ═══ Timer ═══
+function setTm(m,el){if(timerOn)return;timerSec=m*60;timerTotal=m*60;updTm();document.querySelectorAll('.tpreset').forEach(p=>p.classList.remove('on'));if(el)el.classList.add('on')}
+function updTm(){const m=Math.floor(timerSec/60),s=timerSec%60,d=document.getElementById('tDisp');if(!d)return;d.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;d.className='timer-num';if(timerSec<=60&&timerSec>0)d.classList.add('danger');else if(timerSec<=300&&timerSec>0)d.classList.add('warn')}
+function togTm(){const btn=document.getElementById('tBtn');if(!btn)return;if(timerOn){clearInterval(timerInt);timerOn=false;btn.innerHTML='▶ Resume';btn.className='btn btn-green btn-lg'}else{timerOn=true;btn.innerHTML='⏸ Pause';btn.className='btn btn-gold btn-lg';timerInt=setInterval(()=>{timerSec--;updTm();if(timerSec<=0){clearInterval(timerInt);timerOn=false;btn.innerHTML='▶ Start';btn.className='btn btn-green btn-lg';const dm=document.getElementById('tDone');if(dm)dm.classList.remove('hidden');document.title='🎉 DONE! — Summer School'}},1000)}}
+function rstTm(){clearInterval(timerInt);timerOn=false;timerSec=timerTotal;updTm();const btn=document.getElementById('tBtn');if(btn){btn.innerHTML='▶ Start';btn.className='btn btn-green btn-lg'}const dm=document.getElementById('tDone');if(dm)dm.classList.add('hidden')}
+
+// ═══ Time Compare ═══
+function cmpTime(){
+  const a=parseInt(document.getElementById('actTime')?.value)||0;
+  const el=document.getElementById('cmpResult');
+  if(!a||!el)return;
+  const blocks = getTodayBlocks();
+  // Estimate expected time based on blocks
+  const timeMap = {typing:12, reading:28, writing:28, math:28, project:30, experiment:35, spanish:18};
+  const expected = blocks.reduce((sum,b) => sum + (timeMap[b]||25), 0);
+  const d=Math.abs(expected-a);
+  if(d<=10) el.innerHTML=`<span style="background:rgba(46,204,113,.1);color:var(--green);padding:8px 16px;border-radius:16px;font-weight:600;display:inline-block">🎯 Within ${d} min of the ~${expected} min estimate! Sharp!</span>`;
+  else if(d<=25) el.innerHTML=`<span style="background:rgba(243,156,18,.1);color:var(--orange);padding:8px 16px;border-radius:16px;font-weight:600;display:inline-block">Off by ${d} min from ~${expected} min estimate. ${a>expected?'Took longer than expected.':'Faster!'} Getting better at estimating!</span>`;
+  else el.innerHTML=`<span style="background:rgba(231,76,60,.1);color:var(--red);padding:8px 16px;border-radius:16px;font-weight:600;display:inline-block">Off by ${d} min from ~${expected} min estimate. Now you know for next time!</span>`;
+}
+
+// ═══ Day Done ═══
+function dayDone(){const m=document.getElementById('dayDoneMsg');if(m){m.classList.remove('hidden');m.scrollIntoView({behavior:'smooth'})}}
+</script>
+</body>
+</html>
