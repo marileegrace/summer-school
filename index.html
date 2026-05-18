@@ -87,6 +87,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .link-scratch{background:linear-gradient(135deg,#F7A41D,#d4891a);color:#0a0a1a}
 .link-other{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.15)}
 .link-spanish{background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff}
+.link-vocab{background:linear-gradient(135deg,#00b4d8,#0077b6);color:#fff}
 .link-start{background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff}
 .link-check{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff}
 
@@ -542,6 +543,39 @@ const SPANISH_DESC = {
   10:"Putting it together: telling time, asking questions, full sentences!"
 };
 
+// ═══ Word Attack — Cristopher only: phonics → roots → context → usage ═══
+const WORD_ATTACK_LINKS = {
+  1:[{label:"IXL: Segment multisyllabic words",url:"https://www.ixl.com/ela/grade-3/segment-multisyllabic-words",cls:"link-ixl"},{label:"IXL: Identify syllable types",url:"https://www.ixl.com/ela/grade-3/identify-syllable-types",cls:"link-ixl"}],
+  2:[{label:"IXL: Blends & digraphs",url:"https://www.ixl.com/ela/grade-3/spell-words-with-blends-and-digraphs-review",cls:"link-ixl"},{label:"IXL: Open & closed syllables",url:"https://www.ixl.com/ela/grade-3/spell-words-with-open-and-closed-syllables",cls:"link-ixl"},{label:"IXL: Letter sounds",url:"https://www.ixl.com/ela/grade-3/select-the-letters-that-make-a-given-sound",cls:"link-ixl"}],
+  3:[{label:"IXL: Base words & affixes",url:"https://www.ixl.com/ela/grade-3/identify-base-words-prefixes-and-suffixes",cls:"link-ixl"},{label:"IXL: Read prefixed words",url:"https://www.ixl.com/ela/grade-3/segment-and-read-words-with-prefixes-or-suffixes",cls:"link-ixl"},{label:"IXL: Prefixes pre-, re-, mis-",url:"https://www.ixl.com/ela/grade-3/use-the-prefixes-pre-re-and-mis",cls:"link-ixl"}],
+  4:[{label:"IXL: Prefixes dis-, mis-, pre-",url:"https://www.ixl.com/ela/grade-4/use-the-prefixes-pre-re-and-mis",cls:"link-ixl"},{label:"IXL: Suffix meanings",url:"https://www.ixl.com/ela/grade-4/determine-the-meaning-of-a-word-with-a-suffix-review",cls:"link-ixl"},{label:"IXL: Sentence with affixed word",url:"https://www.ixl.com/ela/grade-3/complete-the-sentence-with-the-affixed-word",cls:"link-ixl"}],
+  5:[{label:"IXL: Greek & Latin roots",url:"https://www.ixl.com/ela/grade-3/determine-the-meanings-of-greek-and-latin-roots",cls:"link-ixl"},{label:"IXL: Words from roots",url:"https://www.ixl.com/ela/grade-3/determine-the-meanings-of-words-with-greek-and-latin-roots",cls:"link-ixl"}],
+  6:[{label:"IXL: Match roots to meanings",url:"https://www.ixl.com/ela/grade-4/match-words-with-greek-and-latin-roots-to-their-meanings",cls:"link-ixl"},{label:"IXL: Roots as clues",url:"https://www.ixl.com/ela/grade-4/use-greek-and-latin-roots-as-clues-to-the-meanings-of-words",cls:"link-ixl"},{label:"IXL: Sort by root",url:"https://www.ixl.com/ela/grade-4/sort-words-by-shared-greek-or-latin-roots",cls:"link-ixl"}],
+  7:[{label:"IXL: Context clues",url:"https://www.ixl.com/ela/grade-3/use-context-to-identify-the-meaning-of-a-word",cls:"link-ixl"},{label:"IXL: Synonyms in context",url:"https://www.ixl.com/ela/grade-3/determine-the-meaning-of-words-using-synonyms-in-context",cls:"link-ixl"},{label:"IXL: Homonyms in context",url:"https://www.ixl.com/ela/grade-3/use-context-to-determine-the-meaning-of-homonyms",cls:"link-ixl"}],
+  8:[{label:"IXL: Find words using context",url:"https://www.ixl.com/ela/grade-4/find-words-using-context",cls:"link-ixl"},{label:"IXL: Context clues (gr4)",url:"https://www.ixl.com/ela/grade-4/use-context-to-identify-the-meaning-of-a-word",cls:"link-ixl"},{label:"IXL: Antonyms in context",url:"https://www.ixl.com/ela/grade-4/find-antonyms-in-context",cls:"link-ixl"}],
+  9:[{label:"IXL: Academic vocab",url:"https://www.ixl.com/ela/grade-4/use-academic-vocabulary-in-context",cls:"link-ixl"},{label:"IXL: Use roots & affixes",url:"https://www.ixl.com/ela/grade-4/use-words-with-roots-and-affixes",cls:"link-ixl"}],
+  10:[{label:"IXL: Prefixes & suffixes review",url:"https://www.ixl.com/ela/grade-4/determine-the-meanings-of-words-with-prefixes-and-suffixes-review",cls:"link-ixl"},{label:"IXL: Idioms in context",url:"https://www.ixl.com/ela/grade-4/determine-the-meaning-of-idioms-from-context-set-1",cls:"link-ixl"},{label:"IXL: Roots review",url:"https://www.ixl.com/ela/grade-4/use-the-meanings-of-words-as-clues-to-the-meanings-of-greek-and-latin-roots",cls:"link-ixl"}]
+};
+const WORD_ATTACK_DESC = {
+  1:"Break big words into syllables. Learn to chop a long word into pieces you can sound out — no more skipping!",
+  2:"Blends, digraphs & syllable types. Practice the sound combinations that trip you up most.",
+  3:"Prefixes & suffixes: learn to spot the parts that change a word's meaning (un-, re-, -ful, -less).",
+  4:"More word parts: dis-, mis-, pre-, -able, -ment. Use them in real sentences!",
+  5:"Greek & Latin roots — the master key. Learn 'bene' (good), 'mal' (bad), 'dict' (say), 'struct' (build) and suddenly hundreds of words make sense.",
+  6:"Root detective: match new words to roots you already know. Can you figure out a word you've never seen before?",
+  7:"Context clues: when you hit an unknown word, the sentence around it usually tells you what it means. Practice finding those clues.",
+  8:"Advanced context clues: figure out tricky words using the whole paragraph, not just one sentence.",
+  9:"Put it all together: use your roots knowledge + context clues on real academic vocabulary.",
+  10:"Boss level: idioms, review roots & affixes, and tackle words from passages cold. How far have you come?"
+};
+const WORD_ATTACK_TIPS = [
+  'Sound it out: break every long word into chunks today',
+  'Speed round: how many words can you decode in 5 minutes?',
+  'Detective mode: find the root in every word today',
+  'Challenge: use 3 words from this skill in a sentence of your own',
+  'Review day: go back to a skill from earlier this week and try to beat your score'
+];
+
 // ═══ State ═══
 let profile = null, week = 1, day = 'mon';
 let checkedBlocks = new Set();
@@ -713,8 +747,13 @@ function renderAll() {
   // Day info badge
   html += `<div style="text-align:center;margin-bottom:20px"><span style="background:rgba(244,185,66,.1);color:var(--gold);padding:6px 18px;border-radius:20px;font-weight:700;font-size:.9rem;border:1px solid rgba(244,185,66,.2)">${sched.full} — ${sched.note}</span></div>`;
 
-  // Progress bar
-  const blocks = sched.blocks;
+  // Progress bar — inject Word Attack for Cristopher (after typing, before reading)
+  let blocks = [...sched.blocks];
+  if (d.hasEF) {
+    const typIdx = blocks.indexOf('typing');
+    if (typIdx !== -1) blocks.splice(typIdx + 1, 0, 'word_attack');
+    else blocks.unshift('word_attack');
+  }
   const doneCnt = blocks.filter(b => checkedBlocks.has(b)).length;
   const pct = blocks.length > 0 ? Math.round((doneCnt / blocks.length) * 100) : 0;
   html += `<div class="progress-wrap"><div class="progress-label"><span id="progressLabel">${doneCnt} of ${blocks.length} blocks done</span><span class="pct" id="progressPct">${pct}%</span></div>`;
@@ -728,7 +767,8 @@ function renderAll() {
     math: {icon:'🔢', name:'Math', time:'25-30 min'},
     project: {icon:'🛠️', name:'Project / Hands-On', time:'30 min'},
     experiment: {icon:'🧪', name:'Experiment!', time:'30-45 min'},
-    spanish: {icon:'🇪🇸', name:'Spanish', time:'15-20 min'}
+    spanish: {icon:'🇪🇸', name:'Spanish', time:'15-20 min'},
+    word_attack: {icon:'🔓', name:'Word Attack', time:'10 min'}
   };
 
   // Helper: get specific IXL links for a subject this week
@@ -751,6 +791,10 @@ function renderAll() {
       blockData = {desc: SPANISH_DESC[week] || 'Practice Spanish on IXL!', links: []};
       specificLinks = SPANISH_LINKS[week] || [];
       tip = 'Short and fun — learn a little Spanish each week!';
+    } else if (key === 'word_attack') {
+      blockData = {desc: WORD_ATTACK_DESC[week] || 'Build your word power — decode, roots, and context clues!', links: []};
+      specificLinks = WORD_ATTACK_LINKS[week] || [];
+      tip = WORD_ATTACK_TIPS[dayIdx] || 'Sound it out, break it apart, own it!';
     } else {
       blockData = wk[key];
       tip = DAY_TIPS[key] ? DAY_TIPS[key][dayIdx] : '';
